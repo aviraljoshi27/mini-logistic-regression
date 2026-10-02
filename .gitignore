@@ -1,0 +1,9 @@
+# virtual environment (anyone can make it from uv.lock)
+.venv/
+
+# python's automatic cache folder
+__pycache__/
+
+# jupyter's autosave copies of notebooks
+.ipynb_checkpoints/
+
