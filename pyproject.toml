@@ -2,4 +2,11 @@
 name = "mini-logistic-regression"
 version = "0.1.0"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "numpy>=2.5.3",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4.0",
+]
