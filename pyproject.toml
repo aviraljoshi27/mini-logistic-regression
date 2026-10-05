@@ -14,3 +14,10 @@ dev = [
     "scikit-learn>=1.9.1",
     "seaborn>=0.13.2",
 ]
+
+[build-system]
+requires = ["uv_build>=0.12,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "mini_lr"
