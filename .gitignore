@@ -7,3 +7,4 @@ __pycache__/
 # jupyter's autosave copies of notebooks
 .ipynb_checkpoints/
 
+.vscode/
