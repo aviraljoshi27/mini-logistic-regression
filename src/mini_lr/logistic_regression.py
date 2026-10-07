@@ -72,10 +72,19 @@ class LogisticRegression:
             self.weights_ = self.weights_ - self.learning_rate * grad_w
             self.bias_ = self.bias_ - self.learning_rate * grad_b
 
+    def _check_is_fitted(self):
+        """Stop with a clear message if fit hasn't been called yet."""
+        if self.weights_ is None:
+            raise ValueError(
+                "This LogisticRegression is not fitted yet. Call fit(X, y) first."
+            )
+
     def predict_proba(self, X):
         """Probability that each row of X is class 1, using the learned weights."""
+        self._check_is_fitted()
         return predict_proba(X, self.weights_, self.bias_)
 
     def predict(self, X, threshold=0.5):
         """0 or 1 for each row of X, using the learned weights."""
+        self._check_is_fitted()
         return predict_class(X, self.weights_, self.bias_, threshold)
