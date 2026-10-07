@@ -56,6 +56,13 @@ class LogisticRegression:
         self.bias_ = None
         self.loss_history_ = None
 
+    def __repr__(self):
+        """Show the model's settings when it is printed."""
+        return (
+            f"LogisticRegression(learning_rate={self.learning_rate}, "
+            f"n_iterations={self.n_iterations})"
+        )
+
     def fit(self, X, y):
         """Learn the weights and bias with gradient descent."""
         n_samples, n_features = X.shape
