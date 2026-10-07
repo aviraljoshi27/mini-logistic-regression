@@ -71,6 +71,7 @@ class LogisticRegression:
             grad_b = np.mean(error)
             self.weights_ = self.weights_ - self.learning_rate * grad_w
             self.bias_ = self.bias_ - self.learning_rate * grad_b
+        return self
 
     def _check_is_fitted(self):
         """Stop with a clear message if fit hasn't been called yet."""
