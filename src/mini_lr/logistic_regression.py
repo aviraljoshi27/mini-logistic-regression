@@ -44,3 +44,38 @@ def predict_class(X, w, b, threshold=0.5):
     """
     proba = predict_proba(X, w, b)
     return (proba >= threshold).astype(int)
+
+
+class LogisticRegression:
+    """Logistic regression trained with plain gradient descent."""
+
+    def __init__(self, learning_rate=0.1, n_iterations=1000):
+        self.learning_rate = learning_rate
+        self.n_iterations = n_iterations
+        self.weights_ = None
+        self.bias_ = None
+        self.loss_history_ = None
+
+    def fit(self, X, y):
+        """Learn the weights and bias with gradient descent."""
+        n_samples, n_features = X.shape
+        self.weights_ = np.zeros(n_features)
+        self.bias_ = 0.0
+        self.loss_history_ = []
+
+        for _ in range(self.n_iterations):
+            p = predict_proba(X, self.weights_, self.bias_)
+            self.loss_history_.append(binary_cross_entropy(y, p))
+            error = p - y
+            grad_w = X.T @ error / n_samples
+            grad_b = np.mean(error)
+            self.weights_ = self.weights_ - self.learning_rate * grad_w
+            self.bias_ = self.bias_ - self.learning_rate * grad_b
+
+    def predict_proba(self, X):
+        """Probability that each row of X is class 1, using the learned weights."""
+        return predict_proba(X, self.weights_, self.bias_)
+
+    def predict(self, X, threshold=0.5):
+        """0 or 1 for each row of X, using the learned weights."""
+        return predict_class(X, self.weights_, self.bias_, threshold)
