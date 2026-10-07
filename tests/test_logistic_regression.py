@@ -4,6 +4,8 @@ import numpy as np
 import pytest
 
 from mini_lr.logistic_regression import (
+    LogisticRegression,
+    NotFittedError,
     binary_cross_entropy,
     predict_class,
     predict_proba,
@@ -76,3 +78,34 @@ def test_predict_class_threshold_changes_predictions():
     w = np.array([1.0])
     pred = predict_class(X, w, 0.0, threshold=0.7)
     assert list(pred) == [1, 0, 0]
+
+
+X_TINY = np.array([[1.0], [2.0], [3.0], [4.0], [5.0], [6.0]])
+Y_TINY = np.array([0, 0, 0, 1, 1, 1])
+
+
+def test_loss_goes_down_during_training():
+    model = LogisticRegression(n_iterations=200).fit(X_TINY, Y_TINY)
+    assert model.loss_history_[-1] < model.loss_history_[0]
+
+
+def test_model_learns_simple_dataset():
+    model = LogisticRegression(n_iterations=1000).fit(X_TINY, Y_TINY)
+    assert np.array_equal(model.predict(X_TINY), Y_TINY)
+
+
+def test_predict_before_fit_raises_not_fitted_error():
+    model = LogisticRegression()
+    with pytest.raises(NotFittedError):
+        model.predict(X_TINY)
+
+
+def test_fit_returns_the_model():
+    model = LogisticRegression(n_iterations=10)
+    assert model.fit(X_TINY, Y_TINY) is model
+
+
+def test_l2_shrinks_the_weights():
+    plain = LogisticRegression(n_iterations=1000).fit(X_TINY, Y_TINY)
+    shrunk = LogisticRegression(n_iterations=1000, l2=0.1).fit(X_TINY, Y_TINY)
+    assert np.sum(shrunk.weights_**2) < np.sum(plain.weights_**2)
