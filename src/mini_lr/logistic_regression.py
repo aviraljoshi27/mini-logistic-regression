@@ -53,9 +53,10 @@ class NotFittedError(ValueError):
 class LogisticRegression:
     """Logistic regression trained with plain gradient descent."""
 
-    def __init__(self, learning_rate=0.1, n_iterations=1000):
+    def __init__(self, learning_rate=0.1, n_iterations=1000, l2=0.0):
         self.learning_rate = learning_rate
         self.n_iterations = n_iterations
+        self.l2 = l2
         self.weights_ = None
         self.bias_ = None
         self.loss_history_ = None
@@ -64,7 +65,7 @@ class LogisticRegression:
         """Show the model's settings when it is printed."""
         return (
             f"LogisticRegression(learning_rate={self.learning_rate}, "
-            f"n_iterations={self.n_iterations})"
+            f"n_iterations={self.n_iterations}, l2={self.l2})"
         )
 
     def fit(self, X, y):
@@ -76,12 +77,14 @@ class LogisticRegression:
 
         for _ in range(self.n_iterations):
             p = predict_proba(X, self.weights_, self.bias_)
-            self.loss_history_.append(binary_cross_entropy(y, p))
+            penalty = (self.l2 / 2) * np.sum(self.weights_**2)
+            self.loss_history_.append(binary_cross_entropy(y, p) + penalty)
             error = p - y
-            grad_w = X.T @ error / n_samples
+            grad_w = X.T @ error / n_samples + self.l2 * self.weights_
             grad_b = np.mean(error)
             self.weights_ = self.weights_ - self.learning_rate * grad_w
             self.bias_ = self.bias_ - self.learning_rate * grad_b
+
         return self
 
     def _check_is_fitted(self):
