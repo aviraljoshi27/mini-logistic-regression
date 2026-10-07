@@ -46,6 +46,10 @@ def predict_class(X, w, b, threshold=0.5):
     return (proba >= threshold).astype(int)
 
 
+class NotFittedError(ValueError):
+    """Raised when predict or predict_proba is called before fit."""
+
+
 class LogisticRegression:
     """Logistic regression trained with plain gradient descent."""
 
@@ -83,7 +87,7 @@ class LogisticRegression:
     def _check_is_fitted(self):
         """Stop with a clear message if fit hasn't been called yet."""
         if self.weights_ is None:
-            raise ValueError(
+            raise NotFittedError(
                 "This LogisticRegression is not fitted yet. Call fit(X, y) first."
             )
 
