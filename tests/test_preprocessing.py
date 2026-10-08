@@ -34,3 +34,11 @@ def test_scaler_uses_training_statistics_only():
 def test_transform_before_fit_raises_not_fitted_error():
     with pytest.raises(NotFittedError):
         StandardScaler().transform(X_SCALE)
+
+
+def test_constant_column_becomes_zeros_not_nan():
+    X_constant = np.array([[5.0, 1.0], [5.0, 2.0], [5.0, 3.0]])
+    X_scaled = StandardScaler().fit(X_constant).transform(X_constant)
+
+    assert not np.isnan(X_scaled).any()
+    np.testing.assert_allclose(X_scaled[:, 0], [0.0, 0.0, 0.0])

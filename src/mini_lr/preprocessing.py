@@ -20,7 +20,11 @@ class StandardScaler:
         """Learn each column's mean and standard deviation from X (training data only)."""
         X = np.asarray(X, dtype=float)
         self.mean_ = X.mean(axis=0)
-        self.scale_ = X.std(axis=0)
+        scale = X.std(axis=0)
+        scale[scale == 0] = (
+            1.0  # a constant column would divide by zero; 1 leaves it as zeros
+        )
+        self.scale_ = scale
         return self
 
     def transform(self, X):
